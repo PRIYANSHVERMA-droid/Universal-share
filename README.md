@@ -1,121 +1,101 @@
 <p align="center">
-  <img src="assets/icons/logo.png" alt="Universal Share Logo" width="120" />
+  <img src="assets/icons/logo.png" width="120" alt="Universal Share Logo">
 </p>
 
-<h1 align="center">Universal Share</h1>
+<h1 align="center">🌐 Universal Share</h1>
 
 <p align="center">
-  A secure, cross-platform local file transfer application built with Flutter.
+  <b>A Secure, High-Performance, Cross-Platform Local Peer-to-Peer File Sharing Suite</b>
 </p>
 
 <p align="center">
-  Universal Share allows seamless, encrypted peer-to-peer file sharing within local area networks (LAN) without requiring an internet connection, third-party servers, or cloud storage.
+  <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="MIT License">
+  <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Windows%20%7C%20macOS%20%7C%20Linux-0078d7?style=flat-square" alt="Multi-Platform Support">
+  <img src="https://img.shields.io/badge/Version-1.0.0-emerald?style=flat-square" alt="Version 1.0.0">
+  <img src="https://img.shields.io/badge/Built%20With-Flutter-02569B?style=flat-square&logo=flutter" alt="Flutter">
+  <img src="https://img.shields.io/badge/Privacy-100%25%20Local-success?style=flat-square" alt="100% Local">
 </p>
 
-Designed with a focus on privacy, speed, and sleek aesthetics, Universal Share implements end-to-end TLS encryption, automatic zero-configuration peer discovery, and an interactive radar UI.
-
-
----
-
-## 🚀 Key Features
-
-- **Zero-Configuration Peer Discovery**: Leverages Multicast DNS (mDNS) Zeroconf and fallback UDP Broadcast packets to automatically discover nearby active devices on the same local network.
-- **Secure End-to-End Encryption**: Every transfer is encrypted using dynamically generated self-signed TLS certificates.
-- **Pin-Based Secure Pairing**: Untrusted devices must match a 4-digit PIN upon the first transfer request. The receiver verifies and white-lists the sender's certificate fingerprint for future seamless sharing.
-- **High-Speed Transfers**: Stream-based file sending built on top of Dart's `HttpServer` and `shelf_router`, complete with chunk-by-chunk transmission.
-- **Data Integrity Verification**: Validates file integrity via SHA-256 checksum headers before finalizing transfers.
-- **Interactive Radar UI**: Features a beautiful, modern Concentric Radar animation mapping nearby active devices visually in real time.
-- **Detailed History Logs**: Tracks all incoming and outgoing transfer sessions, with status details (pending, transferring, completed, failed, or cancelled).
-- **Configurable Settings**: Custom device naming, user-selected downloads folder, auto-acceptance mode for trusted devices, and dark/light theme options.
+<p align="center">
+  <a href="https://github.com/PRIYANSHVERMA-droid/Universal-share/releases">
+    <img src="https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge&logo=github" alt="Download Latest Release">
+  </a>
+</p>
 
 ---
 
-## 🛠️ Technology Stack
+## 🚀 Overview
 
-Universal Share is engineered using modern Flutter architecture guidelines and robust networking packages:
+**Universal Share** is a state-of-the-art, fully local peer-to-peer file transfer workstation built with Flutter. It enables high-speed, secure, and zero-configuration file sharing within local area networks (LAN) without relying on internet access, external servers, or cloud storage. 
 
-| Category | Technology / Library | Purpose |
-| --- | --- | --- |
-| **Framework** | [Flutter SDK](https://flutter.dev) | Cross-platform frontend & desktop compilation |
-| **State Management** | [Riverpod 2](https://riverpod.dev) | Predictable, compile-safe state container & dependency injection |
-| **Networking** | [nsd](https://pub.dev/packages/nsd) & [shelf](https://pub.dev/packages/shelf) | Multicast DNS (mDNS) client/server & local shelf web server |
-| **Security & Cryptography**| [pointycastle](https://pub.dev/packages/pointycastle) & [basic_utils](https://pub.dev/packages/basic_utils) | Self-signed certificate generation & TLS handshake utilities |
-| **Database & Cache** | [shared_preferences](https://pub.dev/packages/shared_preferences) | Device preferences, download paths, and trusted fingerprints storage |
-| **Utility** | [path_provider](https://pub.dev/packages/path_provider) & [file_picker](https://pub.dev/packages/file_picker) | File system navigation & cross-platform system file selection |
+By utilizing dynamic, self-signed TLS certificates for end-to-end encryption and a dual-mode peer discovery mechanism (mDNS Zeroconf and UDP broadcast), Universal Share delivers top-tier performance while keeping your files entirely confidential. **Your data never leaves your local network.**
 
----
-
-## 🏗️ Directory Structure
-
-The project implements a **Clean, Feature-First Architecture** to isolate business logic from presentation:
-
-```
-lib/
-├── app.dart                        # Core MaterialApp configuration and theme selection
-├── main.dart                       # App entry point (initializes DB, certs, preferences)
-├── core/                           # Shared modules, engines, and utilities
-│   ├── constants/                  # AppConstants (ports, timeouts, keys)
-│   ├── models/                     # Shared models (DeviceModel, TransferFileModel, etc.)
-│   ├── network/                    # Core communication classes (discovery, server, client, TLS)
-│   ├── providers/                  # Shared Riverpod providers (storage, network configs)
-│   ├── storage/                    # Storage and Database repository implementations
-│   └── theme/                      # Sleek dark and light Material Design 3 themes
-└── features/                       # Self-contained modules/features
-    ├── discovery/                  # Radar dashboard screen and active scan controls
-    ├── history/                    # List and clear operations for transfer logs
-    ├── pairing/                    # First-time security authorization flow
-    ├── receive/                    # Incoming file alert, PIN validation dialogs
-    ├── send/                       # File selection, peer confirmations, transfer progress
-    └── settings/                   # Custom settings panel UI and state manager
-```
+### 💎 Key Highlights
+- **100% Private & Local:** Dynamic local TLS socket handshakes ensure absolute confidentiality.
+- **Zero Configuration:** Scan, connect, and transfer instantly without manually typing IP addresses.
+- **Dual-Mode Discovery:** mDNS client/server with automated UDP broadcast fallback to support restricted routers and cross-device connections.
+- **Interactive Radar UI:** A modern, custom-rendered canvas radar scanner mapping local peers in real time.
 
 ---
 
-## 🔄 File Transfer Protocol Workflow
+## 🖥️ User Interface Preview
 
-Universal Share uses a secure local HTTP server running over HTTPS. Here is a high-level representation of how a transfer works:
+### 📡 Radar Scan Dashboard
+A sleek, responsive system landing dashboard featuring real-time peer discovery and visual concentric radar feedback.
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Sender as Sender App
-    actor Receiver as Receiver App
-
-    Note over Sender, Receiver: 1. Zero-Configuration Local Discovery
-    Sender->>Receiver: Broadcast Presence (mDNS / UDP Port 53318)
-    Receiver->>Sender: Respond with IP & Port Info
-
-    Note over Sender, Receiver: 2. Trust Verification / Secure Pairing
-    Sender->>Receiver: POST /transfer-request (TLS, files meta, cert fingerprint)
-    alt Sender NOT in Trusted List
-        Receiver->>Receiver: Generate random 4-digit PIN
-        Receiver-->>Sender: 403 Forbidden (Pin challenge request)
-        Sender->>Sender: Show PIN input dialog
-        Sender->>Receiver: POST /transfer-request (with PIN)
-        Receiver->>Receiver: Validate PIN
-    end
-    Receiver->>Receiver: Cache Sender Certificate Fingerprint
-    Receiver-->>Sender: 200 OK (Accepted, SessionID)
-
-    Note over Sender, Receiver: 3. Streaming File Transfer
-    loop For each selected file
-        Sender->>Receiver: PUT /transfer/{SessionID}/file/{index} (with SHA-256 Checksum header)
-        Sender->>Receiver: Stream File Byte-Chunks
-        Receiver->>Receiver: Compute SHA-256 and match header
-        Receiver-->>Sender: 200 OK (File Success)
-    end
-```
+<p align="center">
+  <img src="assets/screenshots/nearby_devices.png" width="850" alt="Universal Share Radar scan screen">
+</p>
 
 ---
 
-## ⚙️ Installation & Setup
+## 🔥 Features & Capabilities
 
-### Prerequisites
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) (Stable channel recommended)
-- Dart SDK `>=3.3.0 <4.0.0`
-- Android SDK, iOS Xcode, or Windows C++ build tools (depending on target platform)
+### 📡 Zero-Configuration Discovery
+- **mDNS Engine:** Registers and resolves local devices automatically using the `_universalshare._tcp` service type identifier.
+- **UDP Broadcast Fallback:** Periodically broadcasts presence packets (every 3 seconds) over port `53318` to discover Windows and Android devices where mDNS might be restricted by router firewalls.
+- **Active Peer Tracking:** Automatically evicts peers that haven't responded within `10 seconds` to maintain a live, up-to-date scanning dashboard.
 
-### Getting Started
+### 🛡️ Secure Pairing & Trust
+- **Dynamic TLS Generation:** Creates RSA 2048-bit keys and X.509 self-signed certificates locally at boot using PointyCastle.
+- **PIN-Based Handshake:** Generates a one-time 4-digit PIN for first-time connections to prevent unwanted files from being pushed to your device.
+- **Certificate Fingerprinting:** Verifies and stores trusted peers' certificate SHA-256 hashes to bypass PIN verification in future transfer sessions.
+- **Safe Directory Sanitization:** Sanitizes relative paths for received assets to prevent Directory Traversal attacks.
+
+### ⚡ Streamed Transfers
+- **Shelf Web Engine:** Hosts a local HTTPS server dynamically binding from ports `53317` to `53327`.
+- **Buffered Chunking:** Streams file contents directly to disk, avoiding high RAM footprints for massive gigabyte transfers.
+- **SHA-256 Integrity Check:** Transmits checksum headers with every file and re-verifies them at destination before confirming success.
+
+---
+
+## ⚙️ Transfer Protocol Specs
+
+| Step | Protocol | Port | Mechanism |
+| :--- | :--- | :--- | :--- |
+| **Discovery** | mDNS / UDP Broadcast | `53318` | Zeroconf announcements and fallback UDP presence broadcasts |
+| **Handshake** | HTTPS (TLS v1.3) | `53317 - 53327` | POST `/transfer-request` with fingerprint and file list metadata |
+| **Pairing** | Security Check | `53317 - 53327` | PIN validation on incoming requests for untrusted peers |
+| **Streaming** | HTTPS Stream | `53317 - 53327` | PUT `/transfer/<sessionId>/file/<index>` with SHA-256 integrity headers |
+
+---
+
+## 🛠️ Tech Stack
+
+Universal Share combines modern Flutter modules for reliable local cross-platform utility:
+
+- **Flutter & Material Design 3** – Cross-platform desktop and mobile rendering engine with dynamic theme-switching.
+- **Riverpod 2** – Compile-safe state container and dependency injection framework.
+- **Shelf & Shelf Router** – A lightweight, pluggable web server pipeline for handling incoming connection endpoints.
+- **PointyCastle & Basic Utils** – Cryptographic libraries for generating TLS keys and self-signed certificates on the fly.
+- **nsd (Network Service Discovery)** – Native mDNS/DNS-SD implementation for device discovery.
+- **Shared Preferences** – Secure local repository for trusted device fingerprints and system preferences.
+
+---
+
+## 📥 Installation & Setup
+
+Getting started with Universal Share requires only the standard Flutter environment setup:
 
 1. **Clone the repository**:
    ```bash
@@ -128,7 +108,7 @@ sequenceDiagram
    flutter pub get
    ```
 
-3. **Generate code bindings** (for Riverpod, Freezed, or DB code generation if used):
+3. **Compile Code Generation Bindings**:
    ```bash
    dart run build_runner build --delete-conflicting-outputs
    ```
@@ -138,20 +118,104 @@ sequenceDiagram
      ```bash
      flutter run -d windows
      ```
-   - For Android:
+   - For Mobile Platforms:
      ```bash
-     flutter run -d <android-device-id>
+     flutter run
      ```
-   - For iOS:
-     ```bash
-     flutter run -d <ios-device-id>
-     ```
+
+👉 [Download the Latest Release](https://github.com/PRIYANSHVERMA-droid/Universal-share/releases)
 
 ---
 
-## 🛡️ Security Considerations
+## 📁 Project Directory Structure
 
-- **Self-Signed Certificates**: Since DNS/hostnames are dynamic on local LANs, the app generates custom self-signed TLS certificates on launch.
-- **First-Time Pin Verification**: Prevents malicious hosts on the same network from initiating silent file-injections.
-- **Path Sanitization**: Relative paths inside received folders are strictly checked and sanitized to prevent Directory Traversal attacks (e.g., trying to write files to `../../etc`).
+```
+Universal Share
+├── assets/
+│   ├── fonts/
+│   ├── icons/
+│   │   └── logo.png
+│   ├── lottie/
+│   └── screenshots/
+│       └── nearby_devices.png
+│
+├── lib/
+│   ├── app.dart                        # Core MaterialApp configuration and theme selection
+│   ├── main.dart                       # App entry point (initializes DB, certs, preferences)
+│   ├── core/                           # Shared modules, engines, and utilities
+│   │   ├── constants/                  # AppConstants (ports, timeouts, keys)
+│   │   ├── models/                     # Shared models (DeviceModel, TransferFileModel, etc.)
+│   │   ├── network/                    # Core communication classes (discovery, server, client, TLS)
+│   │   ├── providers/                  # Shared Riverpod providers (storage, network configs)
+│   │   ├── storage/                    # Storage and Database repository implementations
+│   │   └── theme/                      # Sleek dark and light Material Design 3 themes
+│   └── features/                       # Self-contained modules/features
+│       ├── discovery/                  # Radar dashboard screen and active scan controls
+│       │   ├── application/
+│       │   └── presentation/
+│       │       ├── discovery_screen.dart
+│       │       └── widgets/
+│       │           ├── concentric_radar_view.dart
+│       │           ├── device_card.dart
+│       │           ├── mini_radar_scanner.dart
+│       │           └── radar_animation.dart
+│       ├── history/                    # List and clear operations for transfer logs
+│       │   ├── application/
+│       │   └── presentation/
+│       │       └── history_screen.dart
+│       ├── pairing/                    # First-time security authorization flow
+│       ├── receive/                    # Incoming file alert, PIN validation dialogs
+│       │   ├── application/
+│       │   └── presentation/
+│       │       └── incoming_request_dialog.dart
+│       ├── send/                       # File selection, peer confirmations, transfer progress
+│       │   ├── application/
+│       │   └── presentation/
+│       │       ├── send_confirmation_sheet.dart
+│       │       ├── send_files_dialog.dart
+│       │       └── transfer_progress_screen.dart
+│       └── settings/                   # Custom settings panel UI and state manager
+│           ├── application/
+│           └── presentation/
+│               └── settings_screen.dart
+│
+├── pubspec.yaml
+├── analysis_options.yaml
+└── README.md
+```
+
+---
+
+## 💡 Important Notes
+
+- **Network Configuration:** Both devices must be connected to the same local area network (LAN). Guest networks or enterprise routers with AP isolation enabled may block peer-to-peer discovery and socket connections.
+- **Windows Firewall:** Ensure that Windows Defender Firewall allows incoming/outgoing traffic for the app executable on private networks.
+- **Battery Optimization:** On Android devices, disable battery optimizations for Universal Share to prevent background servers from shutting down during large file streams.
+
+---
+
+## 🔮 Future Roadmap
+
+- 📱 **QR Code Sharing:** Generate and scan dynamic QR codes containing pairing details and host IP for instant, pin-less pairing.
+- 📦 **Multi-Peer Send:** Stream the same set of files concurrently to multiple selected recipients on the radar dashboard.
+- 📂 **Web Share Interface:** Spin up a temporary local HTTP portal allowing non-app clients to download files via web browser.
+- ⚙️ **Custom Bandwidth Throttling:** Add settings to cap transfer rates to preserve host system resource availability.
+
+---
+
+## 🤝 Contributing
+
+Contributions make the open-source community an amazing place to learn, inspire, and create.
+1. Fork the Project.
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the Branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+---
+
+## 📜 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
 
