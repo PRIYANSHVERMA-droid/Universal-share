@@ -33,4 +33,31 @@ class PermissionHelper {
     final location = await Permission.location.isGranted;
     return nearby || location;
   }
+
+  /// Request storage permissions.
+  /// On Android 11+, we might need MANAGE_EXTERNAL_STORAGE for arbitrary folder access,
+  /// but for Downloads folder specifically, WRITE_EXTERNAL_STORAGE (up to API 29) 
+  /// and Scoped Storage handling is usually preferred.
+  /// However, for a file transfer app, MANAGE_EXTERNAL_STORAGE is often used for simplicity if targetSdk is high.
+  static Future<bool> requestStoragePermission() async {
+    if (!Platform.isAndroid) return true;
+
+    if (await Permission.manageExternalStorage.isRestricted) {
+      // Fallback for older versions or if MANAGE_EXTERNAL_STORAGE is not available
+      final status = await [
+        Permission.storage,
+        Permission.photos,
+        Permission.videos,
+        Permission.audio,
+      ].request();
+      return status.values.every((s) => s.isGranted);
+    }
+
+    final status = await Permission.manageExternalStorage.request();
+    if (status.isGranted) return true;
+
+    // Fallback for Android 10 and below
+    final storageStatus = await Permission.storage.request();
+    return storageStatus.isGranted;
+  }
 }

@@ -46,11 +46,45 @@ class SettingsRepository {
   /// Retrieves the selected download folder. Fallback to native Downloads directory where available.
   Future<String> getDownloadPath() async {
     String? path = _prefs.getString(AppConstants.keyDownloadPath);
-    if (path == null || path.isEmpty) {
+    
+    // Check if we need to initialize or if the current path is a suboptimal default (like internal app docs)
+    bool isSuboptimal = false;
+    if (path != null && Platform.isAndroid) {
+      // If it's in the app's internal data directory, it's suboptimal for a user-facing download folder
+      if (path.contains('/data/user/0/') || path.contains('/data/data/')) {
+        isSuboptimal = true;
+      }
+    }
+
+    if (path == null || path.isEmpty || isSuboptimal) {
       Directory? dir;
       try {
         if (Platform.isWindows || Platform.isMacOS) {
           dir = await getDownloadsDirectory();
+        } else if (Platform.isAndroid) {
+          // Common paths for Android Downloads
+          final List<String> candidatePaths = [
+            '/storage/emulated/0/Download',
+            '/sdcard/Download',
+            '/storage/emulated/0/Downloads',
+            '/sdcard/Downloads',
+          ];
+
+          for (final p in candidatePaths) {
+            final d = Directory(p);
+            if (await d.exists()) {
+              dir = d;
+              break;
+            }
+          }
+
+          if (dir == null) {
+            // Last resort for Android: app-specific external storage
+            final extDir = await getExternalStorageDirectory();
+            if (extDir != null) {
+              dir = extDir;
+            }
+          }
         }
       } catch (_) {
         // Fallback if platform fails to resolve downloads dir

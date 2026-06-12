@@ -42,6 +42,7 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
     // Request permissions on Android
     WidgetsBinding.instance.addPostFrameCallback((_) {
       PermissionHelper.requestDiscoveryPermissions();
+      PermissionHelper.requestStoragePermission();
       // Start discovery server automatically for visibility
       ref.read(discoveryControllerProvider.notifier).start();
       // Silent update check on startup
