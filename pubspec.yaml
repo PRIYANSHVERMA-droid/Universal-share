@@ -38,6 +38,7 @@ dependencies:
   # File handling
   file_picker: ^8.0.1
   permission_handler: ^11.3.1
+  url_launcher: ^6.3.0
 
   # Notifications
   flutter_local_notifications: ^17.2.2

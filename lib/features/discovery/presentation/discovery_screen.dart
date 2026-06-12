@@ -19,6 +19,8 @@ import '../../receive/application/receive_providers.dart';
 import 'widgets/mini_radar_scanner.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/universal_share_logo.dart';
+import '../../../core/network/update_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 // Navigation tab state provider
@@ -42,6 +44,8 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
       PermissionHelper.requestDiscoveryPermissions();
       // Start discovery server automatically for visibility
       ref.read(discoveryControllerProvider.notifier).start();
+      // Silent update check on startup
+      _checkUpdatesSilently();
     });
   }
 
@@ -1011,6 +1015,93 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
         );
       }
     });
+  }
+
+  Future<void> _checkUpdatesSilently() async {
+    try {
+      final updateService = ref.read(updateServiceProvider);
+      final updateInfo = await updateService.checkForUpdates();
+      if (updateInfo.hasUpdate && mounted) {
+        _showUpdateDialog(context, updateInfo);
+      }
+    } catch (_) {}
+  }
+
+  void _showUpdateDialog(BuildContext context, AppUpdateInfo updateInfo) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF0D1221),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: Color(0xFF1E2842), width: 1.5),
+        ),
+        title: const Row(
+          children: [
+            Icon(Icons.system_update_rounded, color: Color(0xFF00F2FE), size: 28),
+            SizedBox(width: 12),
+            Text(
+              'Update Available!',
+              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'A new version (${updateInfo.latestVersion}) of Universal Share is available.',
+              style: const TextStyle(color: Colors.white70, fontSize: 13),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Changelog:',
+              style: TextStyle(color: Colors.white30, fontSize: 11, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Container(
+              constraints: const BoxConstraints(maxHeight: 120),
+              width: double.maxFinite,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.02),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.white10),
+              ),
+              child: SingleChildScrollView(
+                child: Text(
+                  updateInfo.changelog,
+                  style: const TextStyle(color: Colors.white54, fontSize: 11, height: 1.4),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Later', style: TextStyle(color: Colors.white38)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(ctx).pop();
+              final uri = Uri.parse(updateInfo.downloadUrl ?? updateInfo.releaseUrl);
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF0078D4),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Update Now'),
+          ),
+        ],
+      ),
+    );
   }
 }
 
